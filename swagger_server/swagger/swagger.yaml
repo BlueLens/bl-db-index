@@ -1,0 +1,138 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a API document for Index DB"
+  version: "0.0.1"
+  title: "bl-db-index"
+  contact:
+    email: "master@bluehack.net"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "index.stylelens.io"
+basePath: "/"
+tags:
+- name: "index"
+  description: "index"
+schemes:
+- "http"
+paths:
+  /indexes:
+    post:
+      tags:
+      - "index"
+      summary: "Added a new Index"
+      description: ""
+      operationId: "add_index"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Index that needs to be added to the db."
+        required: true
+        schema:
+          $ref: "#/definitions/Index"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AddIndexResponse"
+        400:
+          description: "Invalid input"
+      x-swagger-router-controller: "swagger_server.controllers.index_controller"
+  /indexes/{indexId}:
+    get:
+      tags:
+      - "index"
+      summary: "Get Index by indexId"
+      description: "Returns a single Index"
+      operationId: "get_index_by_index_id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "indexId"
+        in: "path"
+        description: "ID of Index to return"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GetIndexResponse"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Product not found"
+      x-swagger-router-controller: "swagger_server.controllers.index_controller"
+  /indexes/objects/{objectId}:
+    get:
+      tags:
+      - "index"
+      summary: "Get Index by objectId"
+      description: "Returns a single Index"
+      operationId: "get_index_by_object_id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "ID of Object to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GetIndexResponse"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Product not found"
+      x-swagger-router-controller: "swagger_server.controllers.index_controller"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Index:
+    type: "object"
+    properties:
+      index_id:
+        type: "integer"
+        format: "int32"
+      object_id:
+        type: "string"
+      product_id:
+        type: "string"
+      feature_vector:
+        type: "array"
+        items:
+          type: "number"
+          format: "float"
+  AddIndexResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+      data:
+        $ref: "#/definitions/AddIndexResponse_data"
+  GetIndexResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+      data:
+        $ref: "#/definitions/Index"
+  AddIndexResponse_data:
+    properties:
+      id:
+        type: "string"
+externalDocs:
+  description: "Find out more about BlueLens"
+  url: "http://bluelens.io"
